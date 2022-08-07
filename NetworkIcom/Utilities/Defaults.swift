@@ -9,12 +9,12 @@ import Foundation
 
 struct Defaults {
     // ConnectionInfo
-    static let radioAddr = "192.168.12.196"
+    static let radioAddr = "IC-705.local"
     static let controlPort = UInt16(50001)
     static let serialPort = UInt16(50002)
     static let audioPort = UInt16(50003)
-    static let user = "n8me"
-    static let password = "msrkmsrk"
+    static let user = "admin"
+    static let password = "password"
     static let computer = "MAC-MINI"
     static let raiodCIV = UInt8(0x98)
     static let hostCIV = UInt8(0xe0)
