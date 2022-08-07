@@ -16,7 +16,7 @@ struct Defaults {
     static let user = "admin"
     static let password = "password"
     static let computer = "MAC-MINI"
-    static let raiodCIV = UInt8(0x98)
+    static let raiodCIV = UInt8(0xa4)     // changed from 0x98 for IC-705
     static let hostCIV = UInt8(0xe0)
 
     // RxAudio
