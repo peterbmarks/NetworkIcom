@@ -28,16 +28,8 @@ struct MainView: View {
     @State var state2 = false
     @State var counter = ""
     @State var counter2 = ""
-    
-    fileprivate func clickToTune(_ newX: CGFloat) {
-        let xRangeFraction = newX / 475.0
-        let highF = civDecode.panadapterMain.panUpper
-        let lowF = civDecode.panadapterMain.panLower
-        let frequencyRange = highF - lowF
-        let newFrequency = Int((CGFloat(frequencyRange) * xRangeFraction) + CGFloat(lowF))
-        print("newFrequency = \(newFrequency)")
-        self.tuneHz(hz: newFrequency)
-    }
+    @State var editingFrequency = false
+    @State private var frequencyString: String = ""
     
     var body: some View {
         VStack {
@@ -45,10 +37,11 @@ struct MainView: View {
                 VStack {
                     VStack {
                         Text("\(String(format: "%0.4f", Double(civDecode.frequency) / 1_000_000)) MHz")
-                            .font(.largeTitle)
-                            .onTapGesture {
-                                print("Ask for frequency")
-                            }
+                        .font(.largeTitle)
+                        .onTapGesture {
+                            print("Ask for frequency")
+                            editingFrequency = true
+                        }
                         Text(civDecode.modeFilter.description)
                         Text("Attenuator: \(civDecode.attenuation.description)")
                         Text("Underrun: \(icomVM.underrunCount)")
@@ -166,6 +159,20 @@ struct MainView: View {
         }
         .frame(width: 475)
         .padding()
+    }
+    
+    func updateFrequency() {
+        self.frequencyString = "\(civDecode.frequency)"
+    }
+    
+    fileprivate func clickToTune(_ newX: CGFloat) {
+        let xRangeFraction = newX / 475.0
+        let highF = civDecode.panadapterMain.panUpper
+        let lowF = civDecode.panadapterMain.panLower
+        let frequencyRange = highF - lowF
+        let newFrequency = Int((CGFloat(frequencyRange) * xRangeFraction) + CGFloat(lowF))
+        print("newFrequency = \(newFrequency)")
+        self.tuneHz(hz: newFrequency)
     }
     
     func tune(deltaHz: Int) {
