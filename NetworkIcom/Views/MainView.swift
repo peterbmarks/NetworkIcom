@@ -41,26 +41,14 @@ struct MainView: View {
     
     var body: some View {
         VStack {
-            VStack {
-//                Text("Control")
-//                    .font(.title)
-                // Text("Retransmit Count: \(icomVM.controlRetransmitCount)")
-                // Text("CI-V Addr: \(String(format: "0x%02x", icomVM.radioCivAddr))")
-            }
-//            Divider()
             HStack {
                 VStack {
                     VStack {
-    //                    Text("Serial")
-    //                        .font(.title)
-                        // Text("State: \(icomVM.serialState)")
-                        // Text("Latency: \(icomVM.serialLatency)")
-                        // Text("Retransmit Count: \(icomVM.serialRetransmitCount)")
                         Text("\(String(format: "%0.4f", Double(civDecode.frequency) / 1_000_000)) MHz")
                             .font(.largeTitle)
-    //                        .onTapGesture {
-    //                            civDecode.frequency = 0
-    //                        }
+                            .onTapGesture {
+                                print("Ask for frequency")
+                            }
                         Text(civDecode.modeFilter.description)
                         Text("Attenuator: \(civDecode.attenuation.description)")
                         Text("Underrun: \(icomVM.underrunCount)")
@@ -68,7 +56,6 @@ struct MainView: View {
                     }
                     VStack {
                         HStack {
-
                             Button("-10k") {
                                 self.tune(deltaHz: -10000)
                             }
@@ -91,9 +78,37 @@ struct MainView: View {
                         }
                     }
                 }
+                VStack {
+                    Button("80m") {
+                        tuneHz(hz: 3600000)
+                    }
+                    Button("40m") {
+                        tuneHz(hz: 7100000)
+                    }
+                    Button("20m") {
+                        tuneHz(hz: 14100000)
+                    }
+                    Button("10m") {
+                        tuneHz(hz: 28100000)
+                    }
+                }
+                VStack {
+                    Button("LSB") {
+                        icomVM.setOperatingMode(mode: .lsb, filter: .fil1)
+                        civDecode.modeFilter = ModeFilter(mode: .lsb, filter: .fil1)
+                    }
+                    Button("USB") {
+                        icomVM.setOperatingMode(mode: .usb, filter: .fil1)
+                        civDecode.modeFilter = ModeFilter(mode: .usb, filter: .fil1)
+                    }
+                    Button("AM") {
+                        icomVM.setOperatingMode(mode: .am, filter: .fil1)
+                        civDecode.modeFilter = ModeFilter(mode: .am, filter: .fil1)
+                    }
+                    
+                }
             }
             VStack {
-//                Text("Pan Timing: \(civDecode.panadapterMain.2)")
                 if #available(macOS 13.0, *) {
                     BandscopeView(data: (civDecode.panadapterMain.panadapter, civDecode.panadapterMain.history))
                         .frame(width: 475, height: 200)
@@ -126,11 +141,6 @@ struct MainView: View {
                         .frame(width: 475, height: 100)
                         .background(BGGrid().stroke(.gray, lineWidth: 1.0))
                 }
-//                Text("Pan Timing: \(civDecode.panadapterSub.2)")
-//                BandscopeView(data: (civDecode.panadapterSub.0, civDecode.panadapterSub.1))
-//                    .frame(width: 694, height: 200)
-//                Image(decorative: civDecode.waterfallContexts[1].makeImage()!, scale: 1.0)
-//                    .frame(width: 689, height: 100)
             }
             VStack {
                 Button(icomVM.connected ? "Disconnect" : "Connect") {
@@ -140,10 +150,6 @@ struct MainView: View {
                         icomVM.connectControl()
                     }
                 }
-//                Button("Audio Info") {
-//                    print(Audio.getOutputDevices())
-//                    print(Audio.getInputDevices())
-//                }
                 VStack {
                     HStack {
                         Text("Control State: \(icomVM.controlState)")
