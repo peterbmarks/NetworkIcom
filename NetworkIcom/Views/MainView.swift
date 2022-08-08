@@ -46,7 +46,7 @@ struct MainView: View {
                         // Text("State: \(icomVM.serialState)")
                         // Text("Latency: \(icomVM.serialLatency)")
                         // Text("Retransmit Count: \(icomVM.serialRetransmitCount)")
-                        Text("\(String(format: "%0.3f", Double(civDecode.frequency) / 1_000_000)) MHz")
+                        Text("\(String(format: "%0.4f", Double(civDecode.frequency) / 1_000_000)) MHz")
                             .font(.largeTitle)
     //                        .onTapGesture {
     //                            civDecode.frequency = 0
@@ -84,19 +84,41 @@ struct MainView: View {
     //                        .fixedSize()
                     }
                 }
-                VStack {
-                    Button("Up") {
-                        var operatingFrequency = civDecode.frequency
-                        print("Up pressed \(operatingFrequency)")
-                        operatingFrequency += 1000
-                        icomVM.setOperatingFrequency(frequency: operatingFrequency)
-                    }
-                    Button("Down") {
+                HStack {
+                    Button("-1000") {
                         var operatingFrequency = civDecode.frequency
                         print("Down pressed \(operatingFrequency)")
                         operatingFrequency -= 1000
                         icomVM.setOperatingFrequency(frequency: operatingFrequency)
+                        // assume it worked
+                        civDecode.frequency = operatingFrequency
                     }
+                    Button("-100") {
+                        var operatingFrequency = civDecode.frequency
+                        print("Down pressed \(operatingFrequency)")
+                        operatingFrequency -= 100
+                        icomVM.setOperatingFrequency(frequency: operatingFrequency)
+                        // assume it worked
+                        civDecode.frequency = operatingFrequency
+                    }
+                    
+                    Button("+100") {
+                        var operatingFrequency = civDecode.frequency
+                        print("Up pressed \(operatingFrequency)")
+                        operatingFrequency += 100
+                        icomVM.setOperatingFrequency(frequency: operatingFrequency)
+                        // assume it worked
+                        civDecode.frequency = operatingFrequency
+                    }
+                    Button("+1000") {
+                        var operatingFrequency = civDecode.frequency
+                        print("Up pressed \(operatingFrequency)")
+                        operatingFrequency += 1000
+                        icomVM.setOperatingFrequency(frequency: operatingFrequency)
+                        // assume it worked
+                        civDecode.frequency = operatingFrequency
+                    }
+                    
                 }
             }
             VStack {

@@ -82,7 +82,7 @@ class UDPSerial: UDPBase {
         if current.count > c.headerLength && current[c.cmd].uint8 == CIVCode.code {
             // print (current.dump)
             let civData = Data(current.dropFirst(c.headerLength))
-            // print (civData.dump)
+            //print (civData.dump)
             if !civ.isUnsolicited(civData: civData) {
                 waitReply = false
                 sendIfNeeded()
@@ -90,6 +90,7 @@ class UDPSerial: UDPBase {
 //            DispatchQueue.main.async { [weak self] in
 //                self?.civDecode(civData)
 //            }
+            
             self.civDecode(civData)
             return
         }
