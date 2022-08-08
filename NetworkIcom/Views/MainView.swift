@@ -38,49 +38,65 @@ struct MainView: View {
                 // Text("CI-V Addr: \(String(format: "0x%02x", icomVM.radioCivAddr))")
             }
 //            Divider()
-            VStack {
+            HStack {
                 VStack {
-//                    Text("Serial")
-//                        .font(.title)
-                    // Text("State: \(icomVM.serialState)")
-                    // Text("Latency: \(icomVM.serialLatency)")
-                    // Text("Retransmit Count: \(icomVM.serialRetransmitCount)")
-                    Text("\(String(format: "%0.3f", Double(civDecode.frequency) / 1_000_000)) MHz")
-                        .font(.largeTitle)
-//                        .onTapGesture {
-//                            civDecode.frequency = 0
-//                        }
-                    Text(civDecode.modeFilter.description)
-                    Text(civDecode.attenuation.description)
-                    Text("Underrun: \(icomVM.underrunCount)")
-                    Text("Overrun: \(icomVM.overrunCount)")
+                    VStack {
+    //                    Text("Serial")
+    //                        .font(.title)
+                        // Text("State: \(icomVM.serialState)")
+                        // Text("Latency: \(icomVM.serialLatency)")
+                        // Text("Retransmit Count: \(icomVM.serialRetransmitCount)")
+                        Text("\(String(format: "%0.3f", Double(civDecode.frequency) / 1_000_000)) MHz")
+                            .font(.largeTitle)
+    //                        .onTapGesture {
+    //                            civDecode.frequency = 0
+    //                        }
+                        Text(civDecode.modeFilter.description)
+                        Text(civDecode.attenuation.description)
+                        Text("Underrun: \(icomVM.underrunCount)")
+                        Text("Overrun: \(icomVM.overrunCount)")
+                    }
+                    VStack {
+                        HStack {
+                            Text("Waterfall")
+                            Button("Clear") {
+                                civDecode.waterfallClear(which: 0)
+                            }
+    //                        Button("Clear Sub") {
+    //                            civDecode.waterfallClear(which: 1)
+    //                        }
+                            Button(state ? "Stop" : "Start") {
+    //                             icomVM.serial?.send(command: 0x1a, subCommand: 0x00, data: Data([UInt8(0), 0x01]))
+                                state.toggle()
+                                if !state {
+                                    state2.toggle()
+                                }
+                                icomVM.readSetScopeWaveOn(on: state)
+                                icomVM.readSetScopeWaveOn()
+                            }
+    //                        TextField("Value 1", text: $counter)
+    //                            .fixedSize()
+    //                        TextField("Value 2", text: $counter2)
+    //                            .fixedSize()
+                        }
+    //                    Text(civDecode.printDump)
+    //                        .font(.system(size: 10, design: .monospaced))
+    //                        .fixedSize()
+                    }
                 }
                 VStack {
-                    HStack {
-                        Text("Waterfall")
-                        Button("Clear") {
-                            civDecode.waterfallClear(which: 0)
-                        }
-//                        Button("Clear Sub") {
-//                            civDecode.waterfallClear(which: 1)
-//                        }
-                        Button(state ? "Stop" : "Start") {
-//                             icomVM.serial?.send(command: 0x1a, subCommand: 0x00, data: Data([UInt8(0), 0x01]))
-                            state.toggle()
-                            if !state {
-                                state2.toggle()
-                            }
-                            icomVM.readSetScopeWaveOn(on: state)
-                            icomVM.readSetScopeWaveOn()
-                        }
-//                        TextField("Value 1", text: $counter)
-//                            .fixedSize()
-//                        TextField("Value 2", text: $counter2)
-//                            .fixedSize()
+                    Button("Up") {
+                        var operatingFrequency = civDecode.frequency
+                        print("Up pressed \(operatingFrequency)")
+                        operatingFrequency += 1000
+                        icomVM.setOperatingFrequency(frequency: operatingFrequency)
                     }
-//                    Text(civDecode.printDump)
-//                        .font(.system(size: 10, design: .monospaced))
-//                        .fixedSize()
+                    Button("Down") {
+                        var operatingFrequency = civDecode.frequency
+                        print("Down pressed \(operatingFrequency)")
+                        operatingFrequency -= 1000
+                        icomVM.setOperatingFrequency(frequency: operatingFrequency)
+                    }
                 }
             }
             VStack {

@@ -52,6 +52,7 @@ class UDPSerial: UDPBase {
                                          data: data)
         sendQueue.enqueue(civPacket)
         published.send(.sendQueueSize(sendQueue.size))
+        print("serial.send \(civPacket)")
         sendIfNeeded()
     }
     
@@ -63,6 +64,7 @@ class UDPSerial: UDPBase {
             // print(civPacket.dump())
             track(data: civPacket)
             send(data: civPacket)
+            print("sent")
         }
     }
     

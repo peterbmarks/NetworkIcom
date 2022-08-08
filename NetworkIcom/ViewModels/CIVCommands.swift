@@ -145,6 +145,7 @@ extension IcomVM {
     func readOperatingFrequency() {
         serial?.send(command: 0x03)
     }
+    
     func readOperatingMode() {
         serial?.send(command: 0x04)
     }
