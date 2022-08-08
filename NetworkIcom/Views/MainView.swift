@@ -58,79 +58,27 @@ struct MainView: View {
                     }
                     VStack {
                         HStack {
-//                            Text("Waterfall")
-//                            Button("Clear") {
-//                                civDecode.waterfallClear(which: 0)
-//                            }
-    //                        Button("Clear Sub") {
-    //                            civDecode.waterfallClear(which: 1)
-    //                        }
-//                            Button(state ? "Stop" : "Start") {
-//    //                             icomVM.serial?.send(command: 0x1a, subCommand: 0x00, data: Data([UInt8(0), 0x01]))
-//                                state.toggle()
-//                                if !state {
-//                                    state2.toggle()
-//                                }
-//                                icomVM.readSetScopeWaveOn(on: state)
-//                                icomVM.readSetScopeWaveOn()
-//                            }
-    //                        TextField("Value 1", text: $counter)
-    //                            .fixedSize()
-    //                        TextField("Value 2", text: $counter2)
-    //                            .fixedSize()
+
                             Button("-10k") {
-                                var operatingFrequency = civDecode.frequency
-                                print("Down pressed \(operatingFrequency)")
-                                operatingFrequency -= 10000
-                                icomVM.setOperatingFrequency(frequency: operatingFrequency)
-                                // assume it worked
-                                civDecode.frequency = operatingFrequency
+                                self.tune(deltaHz: -10000)
                             }
                             Button("-1k") {
-                                var operatingFrequency = civDecode.frequency
-                                print("Down pressed \(operatingFrequency)")
-                                operatingFrequency -= 1000
-                                icomVM.setOperatingFrequency(frequency: operatingFrequency)
-                                // assume it worked
-                                civDecode.frequency = operatingFrequency
+                                self.tune(deltaHz: -1000)
                             }
                             Button("-100") {
-                                var operatingFrequency = civDecode.frequency
-                                print("Down pressed \(operatingFrequency)")
-                                operatingFrequency -= 100
-                                icomVM.setOperatingFrequency(frequency: operatingFrequency)
-                                // assume it worked
-                                civDecode.frequency = operatingFrequency
+                                self.tune(deltaHz: -100)
                             }
                             
                             Button("+100") {
-                                var operatingFrequency = civDecode.frequency
-                                print("Up pressed \(operatingFrequency)")
-                                operatingFrequency += 100
-                                icomVM.setOperatingFrequency(frequency: operatingFrequency)
-                                // assume it worked
-                                civDecode.frequency = operatingFrequency
+                                self.tune(deltaHz: +100)
                             }
                             Button("+1k") {
-                                var operatingFrequency = civDecode.frequency
-                                print("Up pressed \(operatingFrequency)")
-                                operatingFrequency += 1000
-                                icomVM.setOperatingFrequency(frequency: operatingFrequency)
-                                // assume it worked
-                                civDecode.frequency = operatingFrequency
+                                self.tune(deltaHz: +1000)
                             }
                             Button("+10k") {
-                                var operatingFrequency = civDecode.frequency
-                                print("Up pressed \(operatingFrequency)")
-                                operatingFrequency += 10000
-                                icomVM.setOperatingFrequency(frequency: operatingFrequency)
-                                // assume it worked
-                                civDecode.frequency = operatingFrequency
+                                self.tune(deltaHz: +10000)
                             }
                         }
-    //                    Text(civDecode.printDump)
-    //                        .font(.system(size: 10, design: .monospaced))
-    //                        .fixedSize()
                     }
                 }
             }
@@ -183,6 +131,15 @@ struct MainView: View {
         }
         .frame(width: 475)
         .padding()
+    }
+    
+    func tune(deltaHz: Int) {
+        var operatingFrequency = civDecode.frequency
+        operatingFrequency += deltaHz
+        icomVM.setOperatingFrequency(frequency: operatingFrequency)
+        // assume it worked
+        civDecode.frequency = operatingFrequency
+        print("Tuning to: \(operatingFrequency)")
     }
 }
 
