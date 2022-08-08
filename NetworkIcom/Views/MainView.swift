@@ -117,7 +117,7 @@ struct MainView: View {
                     BandscopeView(data: (civDecode.panadapterMain.panadapter, civDecode.panadapterMain.history))
                         .frame(width: kWaterfallWidthFloat, height: 200)
                         .gesture(
-                                    DragGesture(minimumDistance: 0, coordinateSpace: .global)
+                            DragGesture(minimumDistance: 0, coordinateSpace: .local)
                                         .onChanged { value in
                                             print("got drag")
                                             let newX = value.location.x
@@ -145,6 +145,15 @@ struct MainView: View {
                     Image(decorative: civDecode.waterfallContexts[0].makeImage()!, scale: 1.0)
                         .frame(width: kWaterfallWidthFloat, height: 100)
                         .background(BGGrid().stroke(.gray, lineWidth: 1.0))
+                        .gesture(
+                            DragGesture(minimumDistance: 0, coordinateSpace: .local)
+                                        .onChanged { value in
+                                            print("got drag")
+                                            let newX = value.location.x
+                                            clickToTune(newX)
+                                        }
+                                        
+                                )
                 }
             }
             VStack {
