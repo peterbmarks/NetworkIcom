@@ -29,6 +29,16 @@ struct MainView: View {
     @State var counter = ""
     @State var counter2 = ""
     
+    fileprivate func clickToTune(_ newX: CGFloat) {
+        let xRangeFraction = newX / 475.0
+        let highF = civDecode.panadapterMain.panUpper
+        let lowF = civDecode.panadapterMain.panLower
+        let frequencyRange = highF - lowF
+        let newFrequency = Int((CGFloat(frequencyRange) * xRangeFraction) + CGFloat(lowF))
+        print("newFrequency = \(newFrequency)")
+        self.tuneHz(hz: newFrequency)
+    }
+    
     var body: some View {
         VStack {
             VStack {
@@ -84,8 +94,18 @@ struct MainView: View {
             }
             VStack {
 //                Text("Pan Timing: \(civDecode.panadapterMain.2)")
-                BandscopeView(data: (civDecode.panadapterMain.panadapter, civDecode.panadapterMain.history))
-                    .frame(width: 475, height: 200)
+                if #available(macOS 13.0, *) {
+                    BandscopeView(data: (civDecode.panadapterMain.panadapter, civDecode.panadapterMain.history))
+                        .frame(width: 475, height: 200)
+                        .onTapGesture { cgPoint in
+                            let newX = cgPoint.x
+                            clickToTune(newX)
+                        }
+                } else {
+                    // Fallback on earlier versions
+                    BandscopeView(data: (civDecode.panadapterMain.panadapter, civDecode.panadapterMain.history))
+                        .frame(width: 475, height: 200)
+                }
                 HStack {
                     Text("\(String(format: "%0.4f", Double(civDecode.panadapterMain.panLower) / 1_000_000)) MHz")
                         .font(.footnote)
@@ -93,10 +113,19 @@ struct MainView: View {
                     Text("\(String(format: "%0.4f", Double(civDecode.panadapterMain.panUpper) / 1_000_000)) MHz")
                         .font(.footnote)
                 }
-                Image(decorative: civDecode.waterfallContexts[0].makeImage()!, scale: 1.0)
-                    .frame(width: 475, height: 100)
-                    .background(BGGrid().stroke(.gray, lineWidth: 1.0))
-                
+                if #available(macOS 13.0, *) {
+                    Image(decorative: civDecode.waterfallContexts[0].makeImage()!, scale: 1.0)
+                        .frame(width: 475, height: 100)
+                        .background(BGGrid().stroke(.gray, lineWidth: 1.0))
+                        .onTapGesture { cgPoint in
+                            let newX = cgPoint.x
+                            clickToTune(newX)
+                        }
+                } else {
+                    Image(decorative: civDecode.waterfallContexts[0].makeImage()!, scale: 1.0)
+                        .frame(width: 475, height: 100)
+                        .background(BGGrid().stroke(.gray, lineWidth: 1.0))
+                }
 //                Text("Pan Timing: \(civDecode.panadapterSub.2)")
 //                BandscopeView(data: (civDecode.panadapterSub.0, civDecode.panadapterSub.1))
 //                    .frame(width: 694, height: 200)
@@ -136,10 +165,14 @@ struct MainView: View {
     func tune(deltaHz: Int) {
         var operatingFrequency = civDecode.frequency
         operatingFrequency += deltaHz
-        icomVM.setOperatingFrequency(frequency: operatingFrequency)
+        tuneHz(hz: operatingFrequency)
+    }
+    
+    func tuneHz(hz: Int) {
+        icomVM.setOperatingFrequency(frequency: hz)
         // assume it worked
-        civDecode.frequency = operatingFrequency
-        print("Tuning to: \(operatingFrequency)")
+        civDecode.frequency = hz
+        print("Tuning to: \(hz)")
     }
 }
 
