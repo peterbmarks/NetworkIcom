@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+let kWaterfallWidth = 475   // set for IC-705
+let kWaterfallWidthFloat = CGFloat(kWaterfallWidth)
+
 struct MainView: View {
         
     @ObservedObject var civDecode: CIVDecode
@@ -104,7 +107,7 @@ struct MainView: View {
             VStack {
                 if #available(macOS 13.0, *) {
                     BandscopeView(data: (civDecode.panadapterMain.panadapter, civDecode.panadapterMain.history))
-                        .frame(width: 475, height: 200)
+                        .frame(width: kWaterfallWidthFloat, height: 200)
                         .onTapGesture { cgPoint in
                             let newX = cgPoint.x
                             clickToTune(newX)
@@ -112,7 +115,16 @@ struct MainView: View {
                 } else {
                     // Fallback on earlier versions
                     BandscopeView(data: (civDecode.panadapterMain.panadapter, civDecode.panadapterMain.history))
-                        .frame(width: 475, height: 200)
+                        .frame(width: kWaterfallWidthFloat, height: 200)
+                        .gesture(
+                                    DragGesture(minimumDistance: 0, coordinateSpace: .global)
+                                        .onChanged { value in
+                                            print("got drag")
+                                            let newX = value.location.x
+                                            clickToTune(newX)
+                                        }
+                                        
+                                )
                 }
                 HStack {
                     Text("\(String(format: "%0.4f", Double(civDecode.panadapterMain.panLower) / 1_000_000)) MHz")
@@ -123,7 +135,7 @@ struct MainView: View {
                 }
                 if #available(macOS 13.0, *) {
                     Image(decorative: civDecode.waterfallContexts[0].makeImage()!, scale: 1.0)
-                        .frame(width: 475, height: 100)
+                        .frame(width: kWaterfallWidthFloat, height: 100)
                         .background(BGGrid().stroke(.gray, lineWidth: 1.0))
                         .onTapGesture { cgPoint in
                             let newX = cgPoint.x
@@ -131,7 +143,7 @@ struct MainView: View {
                         }
                 } else {
                     Image(decorative: civDecode.waterfallContexts[0].makeImage()!, scale: 1.0)
-                        .frame(width: 475, height: 100)
+                        .frame(width: kWaterfallWidthFloat, height: 100)
                         .background(BGGrid().stroke(.gray, lineWidth: 1.0))
                 }
             }
@@ -157,7 +169,7 @@ struct MainView: View {
 
             }
         }
-        .frame(width: 475)
+        .frame(width: kWaterfallWidthFloat)
         .padding()
     }
     
@@ -166,7 +178,7 @@ struct MainView: View {
     }
     
     fileprivate func clickToTune(_ newX: CGFloat) {
-        let xRangeFraction = newX / 475.0
+        let xRangeFraction = newX / kWaterfallWidthFloat
         let highF = civDecode.panadapterMain.panUpper
         let lowF = civDecode.panadapterMain.panLower
         let frequencyRange = highF - lowF
