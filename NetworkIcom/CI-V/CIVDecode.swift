@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct WaterfallSettings {
-    static let columns = 689
+    static let columns = 475 //689
     static let rows = 100
     static let waterfallGain = 4
     static let historyCount = 40

@@ -52,79 +52,92 @@ struct MainView: View {
     //                            civDecode.frequency = 0
     //                        }
                         Text(civDecode.modeFilter.description)
-                        Text(civDecode.attenuation.description)
+                        Text("Attenuator: \(civDecode.attenuation.description)")
                         Text("Underrun: \(icomVM.underrunCount)")
                         Text("Overrun: \(icomVM.overrunCount)")
                     }
                     VStack {
                         HStack {
-                            Text("Waterfall")
-                            Button("Clear") {
-                                civDecode.waterfallClear(which: 0)
-                            }
+//                            Text("Waterfall")
+//                            Button("Clear") {
+//                                civDecode.waterfallClear(which: 0)
+//                            }
     //                        Button("Clear Sub") {
     //                            civDecode.waterfallClear(which: 1)
     //                        }
-                            Button(state ? "Stop" : "Start") {
-    //                             icomVM.serial?.send(command: 0x1a, subCommand: 0x00, data: Data([UInt8(0), 0x01]))
-                                state.toggle()
-                                if !state {
-                                    state2.toggle()
-                                }
-                                icomVM.readSetScopeWaveOn(on: state)
-                                icomVM.readSetScopeWaveOn()
-                            }
+//                            Button(state ? "Stop" : "Start") {
+//    //                             icomVM.serial?.send(command: 0x1a, subCommand: 0x00, data: Data([UInt8(0), 0x01]))
+//                                state.toggle()
+//                                if !state {
+//                                    state2.toggle()
+//                                }
+//                                icomVM.readSetScopeWaveOn(on: state)
+//                                icomVM.readSetScopeWaveOn()
+//                            }
     //                        TextField("Value 1", text: $counter)
     //                            .fixedSize()
     //                        TextField("Value 2", text: $counter2)
     //                            .fixedSize()
+                            Button("-10k") {
+                                var operatingFrequency = civDecode.frequency
+                                print("Down pressed \(operatingFrequency)")
+                                operatingFrequency -= 10000
+                                icomVM.setOperatingFrequency(frequency: operatingFrequency)
+                                // assume it worked
+                                civDecode.frequency = operatingFrequency
+                            }
+                            Button("-1k") {
+                                var operatingFrequency = civDecode.frequency
+                                print("Down pressed \(operatingFrequency)")
+                                operatingFrequency -= 1000
+                                icomVM.setOperatingFrequency(frequency: operatingFrequency)
+                                // assume it worked
+                                civDecode.frequency = operatingFrequency
+                            }
+                            Button("-100") {
+                                var operatingFrequency = civDecode.frequency
+                                print("Down pressed \(operatingFrequency)")
+                                operatingFrequency -= 100
+                                icomVM.setOperatingFrequency(frequency: operatingFrequency)
+                                // assume it worked
+                                civDecode.frequency = operatingFrequency
+                            }
+                            
+                            Button("+100") {
+                                var operatingFrequency = civDecode.frequency
+                                print("Up pressed \(operatingFrequency)")
+                                operatingFrequency += 100
+                                icomVM.setOperatingFrequency(frequency: operatingFrequency)
+                                // assume it worked
+                                civDecode.frequency = operatingFrequency
+                            }
+                            Button("+1k") {
+                                var operatingFrequency = civDecode.frequency
+                                print("Up pressed \(operatingFrequency)")
+                                operatingFrequency += 1000
+                                icomVM.setOperatingFrequency(frequency: operatingFrequency)
+                                // assume it worked
+                                civDecode.frequency = operatingFrequency
+                            }
+                            Button("+10k") {
+                                var operatingFrequency = civDecode.frequency
+                                print("Up pressed \(operatingFrequency)")
+                                operatingFrequency += 10000
+                                icomVM.setOperatingFrequency(frequency: operatingFrequency)
+                                // assume it worked
+                                civDecode.frequency = operatingFrequency
+                            }
                         }
     //                    Text(civDecode.printDump)
     //                        .font(.system(size: 10, design: .monospaced))
     //                        .fixedSize()
                     }
                 }
-                HStack {
-                    Button("-1000") {
-                        var operatingFrequency = civDecode.frequency
-                        print("Down pressed \(operatingFrequency)")
-                        operatingFrequency -= 1000
-                        icomVM.setOperatingFrequency(frequency: operatingFrequency)
-                        // assume it worked
-                        civDecode.frequency = operatingFrequency
-                    }
-                    Button("-100") {
-                        var operatingFrequency = civDecode.frequency
-                        print("Down pressed \(operatingFrequency)")
-                        operatingFrequency -= 100
-                        icomVM.setOperatingFrequency(frequency: operatingFrequency)
-                        // assume it worked
-                        civDecode.frequency = operatingFrequency
-                    }
-                    
-                    Button("+100") {
-                        var operatingFrequency = civDecode.frequency
-                        print("Up pressed \(operatingFrequency)")
-                        operatingFrequency += 100
-                        icomVM.setOperatingFrequency(frequency: operatingFrequency)
-                        // assume it worked
-                        civDecode.frequency = operatingFrequency
-                    }
-                    Button("+1000") {
-                        var operatingFrequency = civDecode.frequency
-                        print("Up pressed \(operatingFrequency)")
-                        operatingFrequency += 1000
-                        icomVM.setOperatingFrequency(frequency: operatingFrequency)
-                        // assume it worked
-                        civDecode.frequency = operatingFrequency
-                    }
-                    
-                }
             }
             VStack {
 //                Text("Pan Timing: \(civDecode.panadapterMain.2)")
                 BandscopeView(data: (civDecode.panadapterMain.panadapter, civDecode.panadapterMain.history))
-                    .frame(width: 694, height: 200)
+                    .frame(width: 475, height: 200)
                 HStack {
                     Text("\(String(format: "%0.4f", Double(civDecode.panadapterMain.panLower) / 1_000_000)) MHz")
                         .font(.footnote)
@@ -133,7 +146,7 @@ struct MainView: View {
                         .font(.footnote)
                 }
                 Image(decorative: civDecode.waterfallContexts[0].makeImage()!, scale: 1.0)
-                    .frame(width: 691, height: 100)
+                    .frame(width: 475, height: 100)
                     .background(BGGrid().stroke(.gray, lineWidth: 1.0))
                 
 //                Text("Pan Timing: \(civDecode.panadapterSub.2)")
@@ -168,7 +181,7 @@ struct MainView: View {
 
             }
         }
-        .frame(width: 700)
+        .frame(width: 475)
         .padding()
     }
 }
