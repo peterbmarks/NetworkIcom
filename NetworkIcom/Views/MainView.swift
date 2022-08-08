@@ -7,6 +7,12 @@
 
 import SwiftUI
 
+// Bandscope is the fft plot
+// Waterfall is the fft over time
+let kWaterfallHeight = 100
+let kWaterfallHeightFloat = CGFloat(kWaterfallHeight)
+let kBandscopeHeight = 200
+let kBandscopeHeightFloat = CGFloat(kBandscopeHeight)
 let kWaterfallWidth = 475   // set for IC-705
 let kWaterfallWidthFloat = CGFloat(kWaterfallWidth)
 
@@ -107,7 +113,7 @@ struct MainView: View {
             VStack {
                 if #available(macOS 13.0, *) {
                     BandscopeView(data: (civDecode.panadapterMain.panadapter, civDecode.panadapterMain.history))
-                        .frame(width: kWaterfallWidthFloat, height: 200)
+                        .frame(width: kWaterfallWidthFloat, height: kBandscopeHeightFloat)
                         .onTapGesture { cgPoint in
                             let newX = cgPoint.x
                             clickToTune(newX)
@@ -115,7 +121,7 @@ struct MainView: View {
                 } else {
                     // Fallback on earlier versions
                     BandscopeView(data: (civDecode.panadapterMain.panadapter, civDecode.panadapterMain.history))
-                        .frame(width: kWaterfallWidthFloat, height: 200)
+                        .frame(width: kWaterfallWidthFloat, height: kBandscopeHeightFloat)
                         .gesture(
                             DragGesture(minimumDistance: 0, coordinateSpace: .local)
                                         .onChanged { value in
@@ -135,7 +141,7 @@ struct MainView: View {
                 }
                 if #available(macOS 13.0, *) {
                     Image(decorative: civDecode.waterfallContexts[0].makeImage()!, scale: 1.0)
-                        .frame(width: kWaterfallWidthFloat, height: 100)
+                        .frame(width: kWaterfallWidthFloat, height: kWaterfallHeightFloat)
                         .background(BGGrid().stroke(.gray, lineWidth: 1.0))
                         .onTapGesture { cgPoint in
                             let newX = cgPoint.x
@@ -143,7 +149,7 @@ struct MainView: View {
                         }
                 } else {
                     Image(decorative: civDecode.waterfallContexts[0].makeImage()!, scale: 1.0)
-                        .frame(width: kWaterfallWidthFloat, height: 100)
+                        .frame(width: kWaterfallWidthFloat, height: kWaterfallHeightFloat)
                         .background(BGGrid().stroke(.gray, lineWidth: 1.0))
                         .gesture(
                             DragGesture(minimumDistance: 0, coordinateSpace: .local)
