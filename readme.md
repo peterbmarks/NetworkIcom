@@ -94,7 +94,7 @@ I am incredibly grateful to Mark Erbaugh for sharing his fantastic code.
 My fork is tiny changes on top of what he has achieved. 
 
 * Changed to work with IC-705
-* The waterfall now aligns (this might be because it's not as wide on IC-705
+* The waterfall now aligns (presumably because it's not as wide on IC-705)
 * There are simple tuning buttons up/down various increments
-* Clicking the bandscope or waterfall tunes to where you click (macOS 13+ only)
+* Clicking the bandscope or waterfall tunes to where you click
 
